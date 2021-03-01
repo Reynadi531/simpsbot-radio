@@ -12,15 +12,15 @@ const run: RunFunction = async(client, message, args) => {
     try {
         // @ts-ignore
         const connection = await client.channels.cache.get(client.currentVC).join();
-        const player = async(url) => {
+        async function player(url) {
             if(!client.playlist[0].videos) return message.channel.send('No playlist queue')
-            // @ts-ignore
-                const info = await ytdl.getBasicInfo(url);
-                if(!info.player_response.microformat.playerMicroformatRenderer.availableCountries.includes('US')) {
-                    client.currentPlayCount += 1;
-                    player(client.playlist[0].videos[client.currentPlayCount - 1])
-                }
-                client.dispatcher = connection.play(ytdl(url))
+            let basicInfo = await ytdl.getBasicInfo(url);
+            if(basicInfo.player_response.playabilityStatus.status == 'UNPLAYABLE') {
+                await client.currentPlayCount ++;
+                console.log(`Unable to play ${url}`);
+                return player(client.playlist[0].videos[client.currentPlayCount - 1]);
+            } else {
+                client.dispatcher = await connection.play(ytdl(url))
                     .on('finish', () => {
                         if(client.currentPlayCount == client.playlist[0].videos.length) {
                             // console.log(client.currentPlayCount, client.playlist[0].videos.length)
@@ -32,12 +32,13 @@ const run: RunFunction = async(client, message, args) => {
                     })
                     .on('error', console.log);
             }
-            player(client.playlist[0].videos[client.currentPlayCount - 1]);
-        } catch (error) {
-            return message.channel.send(client.embed({ title: '❌ Failed play the playlist' }, message))
-            client.logger.error(error);
-            throw new Error(error);
         }
+        player(client.playlist[0].videos[client.currentPlayCount - 1]);
+    } catch (error) {
+        return message.channel.send(client.embed({ title: '❌ Failed play the playlist' }, message))
+        client.logger.error(error);
+        throw new Error(error);
+    }
 }
 
 export { name, description, category, run }
