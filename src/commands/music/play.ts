@@ -15,7 +15,10 @@ const run: RunFunction = async(client, message, args) => {
             const player = (url) => {
                 if(!client.playlist[0].videos) return message.channel.send('No playlist queue')
                 // @ts-ignore
-                if(!ytdl.getBasicInfo(url)) client.currentPlayCount += 1;
+                if(!ytdl.getBasicInfo(url)) {
+                    client.currentPlayCount += 1;
+                    return player(client.playlist[0].videos[client.currentPlayCount - 1])
+                }
                 client.dispatcher = connection.play(ytdl(url))
                     .on('finish', () => {
                         if(client.currentPlayCount == client.playlist[0].videos.length) {
