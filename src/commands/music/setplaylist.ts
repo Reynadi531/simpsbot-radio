@@ -8,7 +8,6 @@ const name: string = 'setplaylist';
 const description: string = 'Set the playlist';
 const category: string = 'music';
 const run: RunFunction = async(client, message, args) => {
-    if(!message.member.hasPermission('MANAGE_CHANNELS')) message.channel.send('You need at least manage channels permission');
     try {
         const data = await ytplaylistvideo(args[0]);
         client.playlist = [];
