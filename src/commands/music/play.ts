@@ -16,7 +16,7 @@ const run: RunFunction = async(client, message, args) => {
             if(!client.playlist[0].videos) return message.channel.send('No playlist queue')
             // @ts-ignore
                 const info = await ytdl.getBasicInfo(url);
-                if(!info.player_response.videoDetails.isCrawlable) {
+                if(!info.player_response.microformat.playerMicroformatRenderer.availableCountries.includes('US')) {
                     client.currentPlayCount += 1;
                     return player(client.playlist[0].videos[client.currentPlayCount - 1])
                 }
