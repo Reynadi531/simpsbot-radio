@@ -30,7 +30,7 @@ const run: RunFunction = async(client, message, args) => {
                         }
                         player(client.playlist[0].videos[client.currentPlayCount - 1]);
                     })
-                    .on('error', error => console.error(error));
+                    .on('error', player(client.playlist[0].videos[client.currentPlayCount + 1]));
             }
             player(client.playlist[0].videos[client.currentPlayCount - 1]);
         } catch (error) {
