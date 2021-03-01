@@ -12,10 +12,11 @@ const run: RunFunction = async(client, message, args) => {
     try {
         // @ts-ignore
         const connection = await client.channels.cache.get(client.currentVC).join();
-            const player = (url) => {
-                if(!client.playlist[0].videos) return message.channel.send('No playlist queue')
-                // @ts-ignore
-                if(!ytdl.getBasicInfo(url)) {
+        const player = async(url) => {
+            if(!client.playlist[0].videos) return message.channel.send('No playlist queue')
+            // @ts-ignore
+                const info = await ytdl.getBasicInfo(url);
+                if(!info.player_response.videoDetails.isCrawlable) {
                     client.currentPlayCount += 1;
                     return player(client.playlist[0].videos[client.currentPlayCount - 1])
                 }
