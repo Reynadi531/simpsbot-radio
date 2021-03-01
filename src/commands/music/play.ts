@@ -1,6 +1,6 @@
 import { RunFunction } from "../../types/command";
 import { youtubeVideo } from '../../include/youtubeconnector';
-const ytdl = require('ytdl-core');
+import ytdl from 'ytdl-core';
 const name: string = 'play';
 const description: string = 'Play music through bot';
 const category: string = 'music';
@@ -15,6 +15,7 @@ const run: RunFunction = async(client, message, args) => {
             const player = (url) => {
                 if(!client.playlist[0].videos) return message.channel.send('No playlist queue')
                 // @ts-ignore
+                if(!ytdl.getBasicInfo(url)) client.currentPlayCount += 1;
                 client.dispatcher = connection.play(ytdl(url))
                     .on('finish', () => {
                         if(client.currentPlayCount == client.playlist[0].videos.length) {
