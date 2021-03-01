@@ -18,7 +18,7 @@ const run: RunFunction = async(client, message, args) => {
                 const info = await ytdl.getBasicInfo(url);
                 if(!info.player_response.microformat.playerMicroformatRenderer.availableCountries.includes('US')) {
                     client.currentPlayCount += 1;
-                    return player(client.playlist[0].videos[client.currentPlayCount - 1])
+                    player(client.playlist[0].videos[client.currentPlayCount - 1])
                 }
                 client.dispatcher = connection.play(ytdl(url))
                     .on('finish', () => {
@@ -30,7 +30,7 @@ const run: RunFunction = async(client, message, args) => {
                         }
                         player(client.playlist[0].videos[client.currentPlayCount - 1]);
                     })
-                    .on('error', player(client.playlist[0].videos[client.currentPlayCount + 1]));
+                    .on('error', console.log);
             }
             player(client.playlist[0].videos[client.currentPlayCount - 1]);
         } catch (error) {
